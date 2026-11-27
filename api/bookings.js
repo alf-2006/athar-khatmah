@@ -1,4 +1,4 @@
-import { getPool } from './_db.js';
+import { ensureSchema } from './_db.js';
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'METHOD_NOT_ALLOWED' });
   }
   try {
-    const pool = getPool();
+    const pool = await ensureSchema();
     const { rows } = await pool.query(
       'select id, part_number, display_name, completed, created_at from public.bookings order by part_number'
     );

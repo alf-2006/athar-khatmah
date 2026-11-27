@@ -1,4 +1,4 @@
-import { getPool, parseBody } from './_db.js';
+import { ensureSchema, parseBody } from './_db.js';
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'INVALID_INPUT' });
   }
   try {
-    const pool = getPool();
+    const pool = await ensureSchema();
     const { rows } = await pool.query(
       'select public.reserve_part($1, $2, $3) as id',
       [part, displayName, tokenHash]
