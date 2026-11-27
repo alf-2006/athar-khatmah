@@ -972,7 +972,7 @@ input {
 
 .reserve-form input:focus {
   border-color: var(--ath-focus);
-  box-shadow: 0 0 0 3px rgba(47, 122, 82, 0.16);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ath-focus) 28%, transparent);
 }
 
 .field-hint {
