@@ -1,0 +1,192 @@
+/* =========================================================
+   Athar Design Tokens — المصدر الوحيد لألوان وأحجام الموقع
+   مستخلص من تطبيقي «وحي» و«مجلس القراء» (إلهام فقط، دون نقل أي أصول).
+   كل قيمة موسومة بمصدرها:
+     [Majlis-CSS]  قيمة قرأتها مباشرة من CSS موقع مجلس القراء
+     [Majlis-Shot] قيمة مقاسة من لقطات الشاشة الرسمية على App Store
+     [Wahy-Shot]   قيمة مقاسة من لقطات الشاشة الرسمية لوحي (تقريبية ±4)
+     [Athar]       قيمة كانت موجودة في الموقع قبل التطبيق
+     [Derived]     قيمة مشتقة لسد فراغ أو لتحسين التباين (WCAG AA)
+   قاعدة ذهبية: الذهبي الفاتح للزخارف والحدود فقط، أما النص الذهبي
+   فيستخدم --ath-accent-text.
+   ========================================================= */
+
+:root {
+  /* ---------- Raw palette: Forest (الأخضر) ---------- */
+  --ath-forest-950: #0f2a23; /* [Derived]      أعمق درجة للتدرجات */
+  --ath-forest-900: #173d34; /* [Athar]        الهيرو والفوتر */
+  --ath-forest-800: #1a4a3b; /* [Majlis-CSS]   */
+  --ath-forest-700: #305434; /* [Wahy-Shot]    الأزرار الأساسية */
+  --ath-forest-600: #508c54; /* [Wahy-Shot]    أيقونات، حالة «مكتمل» */
+  --ath-forest-500: #64b468; /* [Wahy-Shot]    زر داكن — يلزمه نص داكن لا أبيض */
+  --ath-forest-100: #d8e3d3; /* [Wahy-Shot]    حدود وشارات خفيفة */
+  --ath-forest-50:  #eef5ef; /* [Athar]        */
+
+  /* ---------- Raw palette: Gold (الذهبي) ---------- */
+  --ath-gold-800: #836008;   /* [Derived]      الذهبي الآمن للنص (5.58 على العاجي، 4.72 على الرقّ) */
+  --ath-gold-600: #b8860b;   /* [Majlis-CSS]   --accent */
+  --ath-gold-500: #d4af37;   /* [Majlis-CSS]   --accent-light */
+  --ath-gold-300: #d0b468;   /* [Majlis-Shot]  */
+  --ath-gold-100: #f4ecd0;   /* [Derived]      خلفية حالة «محجوز» */
+
+  /* ---------- Raw palette: Surfaces & Ink ---------- */
+  --ath-ivory:        #fdfbf7; /* [Majlis-CSS]  --background */
+  --ath-parchment:    #f0e8d4; /* [Wahy-Shot]   خلفية الأقسام المميزة */
+  --ath-parchment-2:  #e8e0c8; /* [Wahy-Shot]   */
+  --ath-cream:        #f3ead8; /* [Derived]     النص على الأخضر الداكن */
+  --ath-ink-900:      #1a120b; /* [Majlis-CSS]  أغمق بني */
+  --ath-ink-700:      #4a3b2a; /* [Majlis-CSS]  --foreground */
+  --ath-ink-500:      #74644f; /* [Derived]     نص ثانوي (5.52 على العاجي، 4.68 على الرقّ) */
+
+  /* ---------- Semantic: Light theme ---------- */
+  --ath-bg:            var(--ath-ivory);
+  --ath-bg-band:       var(--ath-parchment);
+  --ath-surface:       #ffffff;
+  --ath-surface-sheet: #fbf8f0;
+  --ath-text:          var(--ath-ink-700);
+  --ath-text-strong:   var(--ath-forest-900);
+  --ath-text-muted:    var(--ath-ink-500);
+  --ath-border:        var(--ath-forest-100);
+  --ath-border-gold:   #d4af374d;            /* [Majlis-CSS] --card-border */
+  --ath-primary:       var(--ath-forest-700);
+  --ath-primary-hover: var(--ath-forest-800);
+  --ath-on-primary:    #ffffff;              /* تباين 8.59 */
+  --ath-accent:        var(--ath-gold-500);  /* زخارف وحدود فقط */
+  --ath-accent-text:   var(--ath-gold-800);  /* أي نص ذهبي */
+  --ath-focus:         #2f7a52;
+  --ath-overlay:       #101c18b3;
+
+  /* الهيرو والفوتر (أخضر داكن في الوضعين) */
+  --ath-hero:          var(--ath-forest-900);
+  --ath-on-hero:       var(--ath-cream);
+  --ath-hero-muted:    #d9cda9;
+  --ath-hero-cta-bg:   #e8dfc5;
+  --ath-hero-cta-text: var(--ath-forest-900);
+  --ath-footer:        var(--ath-forest-900);
+  --ath-on-footer:     #e9e3d0;
+
+  /* لون الشعار على الخلفية العادية */
+  --ath-logo-ink:  var(--ath-forest-900);
+  --ath-logo-gold: var(--ath-gold-600);
+
+  /* خلفية أيقونات الأقسام */
+  --ath-tint-bg: #e8f0e8;
+  --ath-tint-fg: #3b6350;
+
+  /* حالات الجزء */
+  --ath-available-bg:     var(--ath-surface);
+  --ath-available-border: var(--ath-forest-100);
+  --ath-available-text:   var(--ath-forest-700);
+  --ath-reserved-bg:      var(--ath-gold-100);
+  --ath-reserved-border:  var(--ath-gold-500);
+  --ath-reserved-text:    var(--ath-gold-800);
+  --ath-done-bg:          var(--ath-forest-700);
+  --ath-done-border:      var(--ath-forest-700);
+  --ath-done-text:        #ffffff;
+
+  /* حالات النظام (info / warn / danger / success) */
+  --ath-success-bg:     var(--ath-forest-50);
+  --ath-success-border: #cfe3d4;
+  --ath-success-text:   #2f5d44;
+  --ath-warn-bg:        #fff8e8;
+  --ath-warn-border:    #eadbb5;
+  --ath-warn-text:      #6e5826;
+  --ath-danger-bg:      #fff0ee;
+  --ath-danger-border:  #f0cbc5;
+  --ath-danger-text:    #8f3328;
+
+  --ath-toast-bg:   var(--ath-forest-900);
+  --ath-toast-text: #ffffff;
+
+  /* ---------- Typography ---------- */
+  --ath-font-ui:      'Cairo', system-ui, sans-serif;                 /* [Majlis-CSS] + [Athar] */
+  --ath-font-display: 'Amiri', 'KFGQPC Naskh', serif;                 /* [Majlis-CSS] + [Athar] */
+
+  --ath-fs-display: clamp(64px, 14vw, 96px); /* [Athar] عنوان الهيرو */
+  --ath-fs-h2: 28px;
+  --ath-fs-lead: 20px;
+  --ath-fs-body: 15px;
+  --ath-fs-small: 13px;
+  --ath-fs-caption: 12px;   /* الحد الأدنى لأي نص — كان 9–11px */
+  --ath-lh-body: 1.9;       /* العربية تحتاج ارتفاع سطر كبيرًا */
+  --ath-lh-tight: 1.35;
+
+  /* ---------- Shape ---------- */
+  --ath-r-sm: 8px;
+  --ath-r-md: 12px;
+  --ath-r-lg: 16px;
+  --ath-r-xl: 24px;     /* ~ Majlis radius-3xl 1.5rem */
+  --ath-r-pill: 999px;
+
+  /* ---------- Elevation ---------- */
+  --ath-shadow-card:  0 7px 17px #244b3c14;     /* [Athar] */
+  --ath-shadow-glow:  0 20px 60px #b8860b26;    /* [Majlis-CSS] --player-shadow */
+  --ath-shadow-float: 0 8px 30px #0003;
+
+  /* ---------- Spacing (4px base) ---------- */
+  --ath-s-1: 4px;  --ath-s-2: 8px;  --ath-s-3: 12px; --ath-s-4: 16px;
+  --ath-s-5: 24px; --ath-s-6: 32px; --ath-s-7: 48px; --ath-s-8: 72px;
+
+  --ath-ease: cubic-bezier(.2, .7, .2, 1);
+  --ath-dur: 180ms;
+}
+
+/* ---------- Dark theme ----------
+   مبني على الوضع الداكن في مجلس القراء: #1a120b و#0f0a05 والحدود #3d342b
+   وحد ذهبي #c9a040 بشفافية 12–15% — كلها [Majlis-CSS]. الباقي [Derived]. */
+[data-theme="dark"] {
+  --ath-bg:            #0f0a05;
+  --ath-bg-band:       #1a120b;
+  --ath-surface:       #1a120b;
+  --ath-surface-sheet: #241a10;
+  --ath-text:          #eadfca;
+  --ath-text-strong:   #fff8ea;
+  --ath-text-muted:    #b5a58a;
+  --ath-border:        #3d342b;
+  --ath-border-gold:   #c9a04026;
+  --ath-primary:       var(--ath-forest-500);
+  --ath-primary-hover: #7cc680;
+  --ath-on-primary:    #0f0a05;      /* نص داكن على الأخضر الفاتح */
+  --ath-accent-text:   var(--ath-gold-500);   /* على الداكن الذهبي نفسه يصلح للنص */
+  --ath-focus:         #7cc680;
+  --ath-overlay:       #000000cc;
+
+  --ath-hero:          #112a24;
+  --ath-footer:        #0b1f1a;
+
+  --ath-logo-ink:  var(--ath-cream);
+  --ath-logo-gold: var(--ath-gold-500);
+
+  --ath-tint-bg: #1d2a20;
+  --ath-tint-fg: #8fd093;
+
+  --ath-available-bg:     #1a120b;
+  --ath-available-border: #3d342b;
+  --ath-available-text:   #8fd093;
+  --ath-reserved-bg:      #2a2010;
+  --ath-reserved-border:  #c9a040;
+  --ath-reserved-text:    #d4af37;
+  --ath-done-bg:          #305434;
+  --ath-done-border:      #508c54;
+  --ath-done-text:        #f3ead8;
+
+  --ath-success-bg:     #12241b;
+  --ath-success-border: #2c4a38;
+  --ath-success-text:   #8fd093;
+  --ath-warn-bg:        #2a2010;
+  --ath-warn-border:    #5a4620;
+  --ath-warn-text:      #e3c677;
+  --ath-danger-bg:      #2e1613;
+  --ath-danger-border:  #5c2a24;
+  --ath-danger-text:    #f0a79d;
+
+  --ath-toast-bg:   #241a10;
+  --ath-toast-text: #f3ead8;
+
+  --ath-shadow-card:  0 7px 17px #0006;
+  --ath-shadow-glow:  0 20px 60px #c9a04014;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --ath-dur: 0ms; }
+}

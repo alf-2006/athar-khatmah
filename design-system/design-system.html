@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نظام تصميم «أثر» المقترح — مستخلص من وحي ومجلس القراء</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../src/tokens.css">
+<style>
+/* رموز خاصة بصفحة العرض فقط (غير مستخدمة في الموقع) */
+:root{--ath-maroon-700:#981818;--ath-surface-glass:#ffffffb3;--ath-font-quran:'UthmaniHafs','KFGQPC Naskh','Amiri',serif;--ath-fs-h1:37px}
+[data-theme="dark"]{--ath-surface-glass:#1a120bcc}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--ath-font-ui);background:var(--ath-bg);color:var(--ath-text);line-height:var(--ath-lh-body);font-size:var(--ath-fs-body);transition:background var(--ath-dur),color var(--ath-dur)}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+section{padding:56px 0}
+h1,h2,h3{color:var(--ath-text-strong);line-height:var(--ath-lh-tight);font-weight:700}
+h2{font-family:var(--ath-font-display);font-size:var(--ath-fs-h1);margin-bottom:6px}
+.sub{color:var(--ath-text-muted);margin-bottom:28px;max-width:70ch}
+h3{font-size:17px;margin:30px 0 12px}
+.mono{font-family:ui-monospace,Consolas,monospace;direction:ltr;unicode-bidi:isolate;font-size:12px}
+
+/* ---------- top bar + hero ---------- */
+.bar{position:sticky;top:0;z-index:20;background:var(--ath-surface-glass);backdrop-filter:blur(10px);border-bottom:1px solid var(--ath-border-gold)}
+.bar .wrap{display:flex;align-items:center;gap:14px;height:58px}
+.bar b{font-family:var(--ath-font-display);font-size:22px;color:var(--ath-text-strong)}
+.bar nav{display:flex;gap:4px;margin-inline-start:auto;flex-wrap:wrap}
+.bar nav a{font-size:13px;text-decoration:none;padding:5px 11px;border-radius:var(--ath-r-pill);color:var(--ath-text-muted)}
+.bar nav a:hover{background:var(--ath-bg-band);color:var(--ath-text-strong)}
+.theme-btn{font:600 13px var(--ath-font-ui);border:1px solid var(--ath-border-gold);background:transparent;color:var(--ath-text);padding:6px 14px;border-radius:var(--ath-r-pill);cursor:pointer}
+.hero{background:var(--ath-hero);color:var(--ath-on-hero);text-align:center;padding:76px 20px 64px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0,#d4af3722,transparent 60%)}
+.hero>*{position:relative}
+.eyebrow{display:inline-block;font-size:12px;letter-spacing:.04em;color:var(--ath-gold-500);border:1px solid #d4af3766;border-radius:var(--ath-r-pill);padding:3px 14px;margin-bottom:18px}
+.hero h1{font-family:var(--ath-font-display);color:#fff;font-size:var(--ath-fs-display);font-weight:700}
+.hero p{max-width:60ch;margin:14px auto 0;font-size:var(--ath-fs-lead);color:var(--ath-on-hero);opacity:.9;font-family:var(--ath-font-display);line-height:1.9}
+
+/* ---------- signature ornaments ---------- */
+.divider{display:flex;align-items:center;gap:12px;margin:26px auto;max-width:360px}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--ath-gold-500),transparent)}
+.divider i{width:9px;height:9px;transform:rotate(45deg);border:1.5px solid var(--ath-gold-600)}
+.leaves{display:inline-flex;gap:6px;color:var(--ath-forest-600)}
+.frame{position:relative}
+.frame::before{content:"";position:absolute;inset:8px;pointer-events:none;--c:var(--ath-gold-500);--l:18px;--t:2px;
+ background:
+  linear-gradient(var(--c),var(--c)) top right/var(--l) var(--t) no-repeat,
+  linear-gradient(var(--c),var(--c)) top right/var(--t) var(--l) no-repeat,
+  linear-gradient(var(--c),var(--c)) top left/var(--l) var(--t) no-repeat,
+  linear-gradient(var(--c),var(--c)) top left/var(--t) var(--l) no-repeat,
+  linear-gradient(var(--c),var(--c)) bottom right/var(--l) var(--t) no-repeat,
+  linear-gradient(var(--c),var(--c)) bottom right/var(--t) var(--l) no-repeat,
+  linear-gradient(var(--c),var(--c)) bottom left/var(--l) var(--t) no-repeat,
+  linear-gradient(var(--c),var(--c)) bottom left/var(--t) var(--l) no-repeat}
+
+/* ---------- source cards ---------- */
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:18px}
+.src{background:var(--ath-surface-glass);border:1px solid var(--ath-border-gold);border-radius:var(--ath-r-xl);padding:26px;box-shadow:var(--ath-shadow-glow)}
+.src h3{margin-top:0;font-family:var(--ath-font-display);font-size:26px}
+.src .tag{display:inline-block;font-size:11px;padding:2px 10px;border-radius:var(--ath-r-pill);background:var(--ath-forest-100);color:var(--ath-forest-700);margin-bottom:10px}
+.src.m .tag{background:var(--ath-gold-100);color:var(--ath-gold-800)}
+[data-theme=dark] .src .tag{background:#305434;color:#f3ead8}
+[data-theme=dark] .src.m .tag{background:#3a2d12;color:#d4af37}
+.src ul{padding-inline-start:18px;margin-top:8px}
+.src li{margin:5px 0;font-size:15px}
+.src em{font-style:normal;color:var(--ath-accent-text);font-weight:600}
+
+/* ---------- swatches ---------- */
+.scale{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:12px}
+.sw{border:1px solid var(--ath-border);border-radius:var(--ath-r-lg);overflow:hidden;background:var(--ath-surface)}
+.sw div{height:64px}
+.sw p{padding:8px 12px 10px;font-size:12px;line-height:1.5}
+.sw strong{display:block;font-size:13px;color:var(--ath-text-strong)}
+.sw small{color:var(--ath-text-muted);display:block}
+.src-m,.src-w,.src-a,.src-d{display:inline-block;font-size:10px;padding:0 7px;border-radius:99px;margin-top:3px;border:1px solid var(--ath-border)}
+
+/* ---------- typography ---------- */
+.type-row{display:grid;grid-template-columns:140px 1fr;gap:18px;align-items:baseline;padding:14px 0;border-bottom:1px dashed var(--ath-border-gold)}
+.type-row .k{font-size:12px;color:var(--ath-text-muted)}
+.quran{font-family:var(--ath-font-quran);font-size:28px;line-height:2.2;color:var(--ath-text-strong)}
+
+/* ---------- components ---------- */
+.board{background:var(--ath-surface);border:1px solid var(--ath-border);border-radius:var(--ath-r-xl);padding:26px;box-shadow:var(--ath-shadow-card)}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{font:700 15px var(--ath-font-ui);border:0;border-radius:var(--ath-r-pill);padding:10px 24px;cursor:pointer;transition:transform var(--ath-dur) var(--ath-ease),background var(--ath-dur)}
+.btn:active{transform:scale(.97)}
+.btn:focus-visible,.part:focus-visible,.tab:focus-visible,.nav-i:focus-visible{outline:3px solid var(--ath-focus);outline-offset:2px}
+.btn.primary{background:var(--ath-primary);color:var(--ath-on-primary)}
+.btn.primary:hover{background:var(--ath-primary-hover)}
+.btn.gold{background:transparent;color:var(--ath-accent-text);border:1.5px solid var(--ath-gold-500)}
+.btn.soft{background:var(--ath-forest-100);color:var(--ath-forest-700)}
+[data-theme=dark] .btn.soft{background:#2a3a2b;color:#bfe3c1}
+.btn.create{background:var(--ath-forest-500);color:var(--ath-forest-900)}
+.round{width:46px;height:46px;border-radius:50%;border:1.5px solid var(--ath-gold-600);background:transparent;color:var(--ath-gold-600);display:grid;place-items:center;cursor:pointer}
+.round.done{background:var(--ath-done-bg);border-color:var(--ath-done-border);color:#fff}
+.fab{width:60px;height:60px;border-radius:50%;background:var(--ath-gold-300);box-shadow:0 0 0 6px #d4af3733,var(--ath-shadow-float);display:grid;place-items:center;color:var(--ath-ink-900)}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 12px;border-radius:var(--ath-r-pill)}
+.chip.gold{background:var(--ath-gold-100);color:var(--ath-gold-800);border:1px solid #d4af3766}
+.chip.mint{background:var(--ath-forest-100);color:var(--ath-forest-700)}
+.chip.maroon{background:var(--ath-maroon-700);color:#fff}
+[data-theme=dark] .chip.gold{background:#2a2010;color:#d4af37}
+[data-theme=dark] .chip.mint{background:#2a3a2b;color:#bfe3c1}
+.tabs{display:inline-flex;background:var(--ath-bg-band);border:1px solid var(--ath-border-gold);border-radius:var(--ath-r-pill);padding:4px}
+.tab{font:700 14px var(--ath-font-ui);padding:8px 26px;border:0;border-radius:var(--ath-r-pill);background:transparent;color:var(--ath-text-muted);cursor:pointer}
+.tab[aria-selected=true]{background:var(--ath-primary);color:var(--ath-on-primary)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stat{background:var(--ath-surface);border:1px solid var(--ath-border-gold);border-radius:var(--ath-r-lg);padding:14px;text-align:center;box-shadow:var(--ath-shadow-card)}
+.stat span{display:block;font-size:12px;color:var(--ath-text-muted)}
+.stat strong{font-family:var(--ath-font-display);font-size:34px;color:var(--ath-text-strong);line-height:1.2}
+.progress{position:relative;height:8px;border-radius:99px;background:var(--ath-border)}
+.progress i{position:absolute;inset-block:0;inset-inline-start:0;border-radius:99px;background:var(--ath-gold-600)}
+.progress b{position:absolute;top:50%;width:22px;height:22px;border-radius:50%;background:var(--ath-surface);border:2px solid var(--ath-gold-600);transform:translate(50%,-50%);box-shadow:var(--ath-shadow-card)}
+.pill-bar{display:inline-flex;align-items:center;gap:6px;background:var(--ath-forest-700);color:#fff;border-radius:var(--ath-r-lg);padding:8px 10px;box-shadow:var(--ath-shadow-float)}
+[data-theme=dark] .pill-bar{background:#223a25}
+.pill-bar button{width:38px;height:36px;border:0;border-radius:var(--ath-r-md);background:#ffffff1f;color:#fff;cursor:pointer;display:grid;place-items:center}
+.pill-bar span{padding:0 12px;font-weight:700;font-size:14px}
+.stepper{display:inline-flex;align-items:center;background:var(--ath-bg-band);border-radius:var(--ath-r-md);padding:4px}
+.stepper button{width:34px;height:34px;border:0;border-radius:var(--ath-r-sm);background:transparent;font-size:20px;color:var(--ath-primary);cursor:pointer}
+.stepper b{min-width:42px;text-align:center;background:var(--ath-surface);border-radius:var(--ath-r-sm);padding:3px 0;color:var(--ath-text-strong)}
+.sheet{border:1px solid var(--ath-border);border-radius:var(--ath-r-lg);overflow:hidden;background:var(--ath-surface);box-shadow:var(--ath-shadow-float);max-width:520px}
+.sheet header{display:flex;align-items:center;gap:10px;background:var(--ath-surface-sheet);padding:10px 16px;font-weight:700;color:var(--ath-text-strong);font-size:15px}
+.sheet header small{margin-inline-start:auto;color:var(--ath-text-muted);font-weight:500}
+.sheet .body{padding:14px 18px;font-family:var(--ath-font-display);font-size:19px;line-height:2.1}
+.sheet .item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-top:1px solid var(--ath-border)}
+.sheet .item .n{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:var(--ath-reserved-bg);color:var(--ath-reserved-text);border:1.5px solid var(--ath-reserved-border)}
+.sheet .item .t{flex:1;line-height:1.5}.sheet .item .t small{display:block;color:var(--ath-text-muted)}
+.quote{padding:28px 30px;border-radius:var(--ath-r-xl);background:linear-gradient(145deg,var(--ath-surface),var(--ath-bg-band));box-shadow:var(--ath-shadow-glow);border:1px solid var(--ath-border-gold);text-align:center}
+.quote q{display:block;font-family:var(--ath-font-display);font-size:24px;line-height:2.1;color:var(--ath-text-strong);quotes:"«" "»"}
+.quote cite{display:block;margin-top:8px;color:var(--ath-accent-text);font-style:normal;font-weight:600;font-size:14px}
+.phone-nav{display:flex;justify-content:space-around;max-width:400px;background:var(--ath-surface);border:1px solid var(--ath-border);border-radius:var(--ath-r-lg);padding:8px 6px}
+.nav-i{display:grid;justify-items:center;gap:2px;font-size:11px;color:var(--ath-text-muted);padding:4px 14px;border-radius:var(--ath-r-md);background:transparent;border:0;font-family:inherit}
+.nav-i.on{color:var(--ath-forest-800);font-weight:800}
+[data-theme=dark] .nav-i.on{color:var(--ath-forest-500)}
+svg{display:block}
+
+/* ---------- parts grid (athar mock) ---------- */
+.parts{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px}
+.part{font-family:inherit;text-align:center;border-radius:var(--ath-r-lg);padding:12px 6px 10px;min-height:104px;cursor:pointer;display:grid;gap:2px;align-content:center;border:1.5px solid;transition:transform var(--ath-dur) var(--ath-ease),box-shadow var(--ath-dur)}
+.part:hover{transform:translateY(-3px);box-shadow:var(--ath-shadow-card)}
+.part .no{font-family:var(--ath-font-display);font-size:30px;font-weight:700;line-height:1.1}
+.part .lbl{font-size:12px;opacity:.85}
+.part .who{font-size:11px;font-weight:600;min-height:17px}
+.part.available{background:var(--ath-available-bg);border-color:var(--ath-available-border);color:var(--ath-available-text)}
+.part.reserved{background:var(--ath-reserved-bg);border-color:var(--ath-reserved-border);color:var(--ath-reserved-text)}
+.part.done{background:var(--ath-done-bg);border-color:var(--ath-done-border);color:var(--ath-done-text)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--ath-text-muted);margin:0 0 16px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:4px;border:1.5px solid}
+.legend .a{background:var(--ath-available-bg);border-color:var(--ath-available-border)}
+.legend .r{background:var(--ath-reserved-bg);border-color:var(--ath-reserved-border)}
+.legend .d{background:var(--ath-done-bg);border-color:var(--ath-done-border)}
+.mock{border-radius:var(--ath-r-xl);overflow:hidden;border:1px solid var(--ath-border-gold);box-shadow:var(--ath-shadow-glow);background:var(--ath-bg)}
+.mock .mh{background:var(--ath-hero);color:var(--ath-on-hero);text-align:center;padding:44px 18px 36px}
+.mock .mh h3{font-family:var(--ath-font-display);color:#fff;font-size:54px;margin:0}
+.mock .mh p{font-family:var(--ath-font-display);font-size:19px;opacity:.9}
+.mock .mb{padding:26px 22px;background:var(--ath-bg-band)}
+
+/* ---------- contrast table ---------- */
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:9px 12px;text-align:start;border-bottom:1px solid var(--ath-border)}
+th{color:var(--ath-text-muted);font-weight:600;font-size:12px}
+.ok{color:var(--ath-forest-600);font-weight:700}.warn{color:#c2410c;font-weight:700}.mid{color:var(--ath-gold-600);font-weight:700}
+.swatch-dot{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-inline-end:6px;border:1px solid #0002}
+footer{padding:36px 0 56px;color:var(--ath-text-muted);font-size:13px;border-top:1px solid var(--ath-border-gold)}
+footer a{color:var(--ath-accent-text)}
+@media(max-width:640px){.type-row{grid-template-columns:1fr;gap:4px}.stats{grid-template-columns:1fr}.bar nav{display:none}}
+</style>
+</head>
+<body>
+
+<div class="bar"><div class="wrap">
+  <b>أثر</b><span class="chip gold">نظام تصميم مقترح</span>
+  <nav><a href="#sources">المصادر</a><a href="#colors">الألوان</a><a href="#type">الخطوط</a><a href="#components">المكوّنات</a><a href="#mock">التطبيق</a><a href="#a11y">التباين</a></nav>
+  <button class="theme-btn" id="themeBtn" aria-pressed="false">الوضع الداكن</button>
+</div></div>
+
+<header class="hero">
+  <span class="eyebrow">مستخلص من «وحي» و«مجلس القراء»</span>
+  <h1>أثر</h1>
+  <div class="divider" aria-hidden="true"><i></i></div>
+  <p>هدوء المصحف الورقي من «وحي»، وفخامة الأرشيف الذهبي من «مجلس القراء»، في نظام واحد لختمة جماعية.</p>
+</header>
+
+<main>
+
+<!-- ============ SOURCES ============ -->
+<section id="sources"><div class="wrap">
+  <h2>ماذا نأخذ من كل تطبيق</h2>
+  <p class="sub">التطبيقان يتشاركان قاعدة واحدة: ورقي دافئ وأخضر وذهبي. الفرق في النبرة، فـ«وحي» هادئ وقرائي، و«مجلس القراء» فخم وأرشيفي.</p>
+  <div class="two">
+    <article class="src">
+      <span class="tag">وحي — مصحف قرائي</span>
+      <h3>الهدوء والوضوح</h3>
+      <ul>
+        <li>خلفية <em>رقّ بيج</em> دافئة <span class="mono">#F0E8D4</span> بدل الأبيض الصريح.</li>
+        <li>أخضر غابي لأشرطة الأدوات والأزرار: <span class="mono">#305434</span> و<span class="mono">#508C54</span>.</li>
+        <li>عناوين خضراء ثقيلة مع عنوان فرعي رملي <span class="mono">#B39465</span>.</li>
+        <li>بطاقات مكدّسة بترويسة أغمق قليلًا (شكل بطاقات التفسير).</li>
+        <li>شريط أدوات أخضر عائم بأزرار مربعة ناعمة.</li>
+        <li>لوحة «إنشاء ختمة» بمنزلق ومُعدِّل أرقام (−٣٠+) وتذكير: مرجع مباشر لما قد يحتاجه «أثر».</li>
+      </ul>
+    </article>
+    <article class="src m">
+      <span class="tag">مجلس القراء — أرشيف تراثي</span>
+      <h3>الفخامة والتفصيل</h3>
+      <ul>
+        <li>صفحة عاجية <span class="mono">#FDFBF7</span> ونص بني دافئ <span class="mono">#4A3B2A</span> بدل الأسود.</li>
+        <li>ذهبي بدرجتين: <span class="mono">#B8860B</span> و<span class="mono">#D4AF37</span> (من CSS الموقع نفسه).</li>
+        <li><em>إطار بأقواس زاوية ذهبية</em> حول البطاقات الإعلامية.</li>
+        <li>فاصل زخرفي: خط ذهبي ← معيّن ← خط.</li>
+        <li>بطاقات زجاجية <span class="mono">#FFFFFFB3</span> بحدّ ذهبي شفاف وظل متوهج ذهبي.</li>
+        <li>لون مميّز لكل قسم (ذهبي، عنابي <span class="mono">#981818</span>، أخضر) مع بقاء الهيكل ثابتًا.</li>
+        <li>وضع داكن بني عميق <span class="mono">#1A120B</span> وليس رماديًا.</li>
+      </ul>
+    </article>
+  </div>
+</div></section>
+
+<!-- ============ COLORS ============ -->
+<section id="colors" style="background:var(--ath-bg-band)"><div class="wrap">
+  <h2>الألوان</h2>
+  <p class="sub">كل لون موسوم بمصدره. «أثر» يملك أصلًا أخضر <span class="mono">#173D34</span> وكريميًّا <span class="mono">#F6F5EF</span> وذهبيًّا خافتًا <span class="mono">#8B7546</span>، فالاقتراح تطوير له وليس استبدالًا.</p>
+
+  <h3>الأخضر Forest — اللون الأساسي</h3>
+  <div class="scale" id="forest"></div>
+  <h3>الذهبي Gold — للزخرفة والتمييز</h3>
+  <div class="scale" id="gold"></div>
+  <h3>الأسطح والحبر Surfaces &amp; Ink</h3>
+  <div class="scale" id="surf"></div>
+</div></section>
+
+<!-- ============ TYPE ============ -->
+<section id="type"><div class="wrap">
+  <h2>الخطوط</h2>
+  <p class="sub">«مجلس القراء» يستخدم <bdi>Cairo</bdi> و<bdi>Amiri</bdi> في CSS، وهما مستخدمان فعلًا في «أثر». الإضافة الوحيدة خط المصحف للآيات إن ظهرت.</p>
+  <div class="board">
+    <div class="type-row"><span class="k">Display · Amiri 700<br><span class="mono">78px / 1.1</span></span><span style="font-family:var(--ath-font-display);font-size:64px;font-weight:700;color:var(--ath-text-strong);line-height:1.15">ختمة جماعية</span></div>
+    <div class="type-row"><span class="k">H1 · Amiri 700<br><span class="mono">37px</span></span><span style="font-family:var(--ath-font-display);font-size:37px;font-weight:700;color:var(--ath-text-strong)">احجز جزءك من القرآن</span></div>
+    <div class="type-row"><span class="k">H2 · Cairo 700<br><span class="mono">26px</span></span><span style="font-size:26px;font-weight:700;color:var(--ath-text-strong)">أجزاء الختمة الثلاثون</span></div>
+    <div class="type-row"><span class="k">Lead · Amiri 400<br><span class="mono">20px / 1.9</span></span><span style="font-family:var(--ath-font-display);font-size:20px;line-height:1.9">اختر جزءًا واحدًا، واقرأه في أسبوع، ثم أكّد إتمامه ليكتمل أثر الجميع.</span></div>
+    <div class="type-row"><span class="k">Body · Cairo 400<br><span class="mono">16px / 1.9</span></span><span>نصٌّ تفصيلي للواجهة. ارتفاع السطر 1.9 مهم للعربية حتى لا تلتصق التشكيلات بالسطر الذي فوقها.</span></div>
+    <div class="type-row"><span class="k">Small · Cairo 600<br><span class="mono">13px</span></span><span style="font-size:13px;color:var(--ath-text-muted)">محجوز بواسطة أحمد · منذ ساعتين</span></div>
+    <div class="type-row"><span class="k">Quran · UthmaniHafs<br><span class="mono">28px / 2.2</span></span><span class="quran">وَنُنَزِّلُ مِنَ الْقُرْآنِ مَا هُوَ شِفَاءٌ وَرَحْمَةٌ لِّلْمُؤْمِنِينَ</span></div>
+  </div>
+  <p class="sub" style="margin-top:14px;font-size:13px">ملاحظة: الصفحة لا تحمّل UthmaniHafs فتظهر الآية بخط Amiri. لتفعيله حمّل الخط من مجمّع الملك فهد (مجاني للاستخدام القرآني) وأضف @font-face.</p>
+</div></section>
+
+<!-- ============ COMPONENTS ============ -->
+<section id="components" style="background:var(--ath-bg-band)"><div class="wrap">
+  <h2>المكوّنات</h2>
+  <p class="sub">كل مكوّن مبني بمتغيرات tokens.css فقط، فيتبدّل بين الفاتح والداكن تلقائيًا. جرّب زر الوضع الداكن بالأعلى.</p>
+
+  <h3>حالات الجزء (قلب «أثر»)</h3>
+  <div class="board">
+    <div class="legend"><span><i class="a"></i> متاح</span><span><i class="r"></i> محجوز</span><span><i class="d"></i> مكتمل</span></div>
+    <div class="parts" style="grid-template-columns:repeat(4,minmax(0,1fr))">
+      <button class="part available"><span class="no">٥</span><span class="lbl">الجزء</span><span class="who">متاح</span></button>
+      <button class="part reserved"><span class="no">٦</span><span class="lbl">الجزء</span><span class="who">أحمد</span></button>
+      <button class="part done"><span class="no">٧</span><span class="lbl">الجزء</span><span class="who">✓ سارة</span></button>
+      <button class="part available" style="outline:3px solid var(--ath-focus);outline-offset:2px"><span class="no">٨</span><span class="lbl">الجزء</span><span class="who">تركيز لوحة المفاتيح</span></button>
+    </div>
+  </div>
+
+  <h3>الأزرار</h3>
+  <div class="board"><div class="row">
+    <button class="btn primary">احجز هذا الجزء</button>
+    <button class="btn gold">مشاركة الموقع</button>
+    <button class="btn soft">تحديث الآن</button>
+    <button class="btn create">إنشاء</button>
+    <button class="round" aria-label="تشغيل"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+    <button class="round done" aria-label="تم"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+    <span class="fab" aria-label="واتساب"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v12H8l-4 4z"/></svg></span>
+  </div>
+  <p class="sub" style="margin:12px 0 0;font-size:13px">زر الإنشاء الأخضر الفاتح (من وحي) يأخذ نصًّا داكنًا لا أبيض، لأن الأبيض عليه لا يحقق التباين المطلوب.</p></div>
+
+  <h3>الشارات والتبويبات</h3>
+  <div class="board"><div class="row">
+    <span class="chip gold">حلقات متفرقة</span><span class="chip mint">ختمة كاملة</span><span class="chip maroon">قسم خاص</span>
+    <div class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true">كل الأجزاء</button><button class="tab" role="tab" aria-selected="false">أجزائي</button><button class="tab" role="tab" aria-selected="false">المتاحة</button></div>
+  </div></div>
+
+  <h3>الإحصاءات والتقدّم</h3>
+  <div class="board">
+    <div class="stats"><div class="stat"><span>إجمالي الأجزاء</span><strong>٣٠</strong></div><div class="stat"><span>محجوز</span><strong>١٤</strong></div><div class="stat"><span>مكتمل</span><strong>٩</strong></div></div>
+    <div style="margin-top:22px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:10px"><b style="color:var(--ath-text-strong)">تقدّم الختمة</b><span style="color:var(--ath-accent-text);font-weight:700">٩ من ٣٠</span></div>
+    <div class="progress"><i style="width:30%"></i><b style="inset-inline-start:30%"></b></div></div>
+  </div>
+
+  <h3>الزخارف المميّزة</h3>
+  <div class="two">
+    <div class="quote frame">
+      <q>وَنُنَزِّلُ مِنَ الْقُرْآنِ مَا هُوَ شِفَاءٌ وَرَحْمَةٌ لِلْمُؤْمِنِينَ</q>
+      <div class="divider" aria-hidden="true"><i></i></div>
+      <cite>بطاقة آية بإطار الزوايا الذهبية + الفاصل المعيّن</cite>
+    </div>
+    <div class="board" style="display:grid;place-items:center;gap:18px;text-align:center">
+      <span class="leaves" aria-hidden="true">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21c-1-5-1-9 0-15 4 3 6 8 4 12-1 2-3 3-4 3zM12 21c0-5-3-8-7-9 0 5 3 9 7 9z"/></svg>
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21c-1-5-1-9 0-15 4 3 6 8 4 12-1 2-3 3-4 3zM12 21c0-5-3-8-7-9 0 5 3 9 7 9z"/></svg>
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21c-1-5-1-9 0-15 4 3 6 8 4 12-1 2-3 3-4 3zM12 21c0-5-3-8-7-9 0 5 3 9 7 9z"/></svg>
+      </span>
+      <span style="font-size:13px;color:var(--ath-text-muted)">ورقة نباتية ثلاثية كخاتمة للأقسام (على غرار روح وحي — رسمتها بنفسي، لا تنسخ شعارهم)</span>
+    </div>
+  </div>
+
+  <h3>شريط الأدوات العائم والمُعدِّل الرقمي</h3>
+  <div class="board"><div class="row" style="gap:30px">
+    <div class="pill-bar" role="toolbar" aria-label="أدوات"><button aria-label="إعدادات"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></button><button aria-label="فهرس"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><span>الجزء ٢٣</span><button aria-label="علامة"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12v18l-6-4-6 4z"/></svg></button></div>
+    <label style="display:flex;align-items:center;gap:10px;font-weight:600;color:var(--ath-text-strong)">مدة الختمة (أيام) <span class="stepper"><button aria-label="زيادة">+</button><b>٣٠</b><button aria-label="إنقاص">−</button></span></label>
+  </div></div>
+
+  <h3>البطاقة المكدّسة (حجوزاتي)</h3>
+  <div class="sheet">
+    <header>حجوزاتي <small>جزءان</small></header>
+    <div class="item"><span class="n">٢٣</span><div class="t"><b style="color:var(--ath-text-strong)">الجزء الثالث والعشرون</b><small>محجوز منذ يومين</small></div><button class="btn primary" style="padding:7px 18px;font-size:14px">تم</button></div>
+    <div class="item"><span class="n">٧</span><div class="t"><b style="color:var(--ath-text-strong)">الجزء السابع</b><small>محجوز اليوم</small></div><button class="btn primary" style="padding:7px 18px;font-size:14px">تم</button></div>
+  </div>
+
+  <h3>شريط التنقّل السفلي (إن توسّع الموقع)</h3>
+  <div class="phone-nav">
+    <button class="nav-i on"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 11l9-8 9 8v10h-6v-6H9v6H3z"/></svg>الأجزاء</button>
+    <button class="nav-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>البحث</button>
+    <button class="nav-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h4v16H5zM11 4h4v16h-4zM17 6l3 1-3 13-3-1z"/></svg>حجوزاتي</button>
+    <button class="nav-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>حسابي</button>
+  </div>
+</div></section>
+
+<!-- ============ MOCK ============ -->
+<section id="mock"><div class="wrap">
+  <h2>«أثر» بالنظام الجديد</h2>
+  <p class="sub">الهيرو بأخضر أثر الحالي مع وهج ذهبي، والأجزاء الثلاثون بالحالات الثلاث. اضغط أي جزء متاح لترى التفاعل.</p>
+  <div class="mock">
+    <div class="mh"><span class="eyebrow">ختمة جماعية</span><h3>أثر</h3><div class="divider" aria-hidden="true"><i></i></div><p>جزء من القرآن لكل واحد، وختمة تجمعنا</p></div>
+    <div class="mb">
+      <div class="stats" style="margin-bottom:22px"><div class="stat"><span>إجمالي الأجزاء</span><strong>٣٠</strong></div><div class="stat"><span>محجوز</span><strong id="cR">0</strong></div><div class="stat"><span>مكتمل</span><strong id="cD">0</strong></div></div>
+      <div class="legend"><span><i class="a"></i> متاح</span><span><i class="r"></i> محجوز</span><span><i class="d"></i> مكتمل</span></div>
+      <div class="parts" id="parts"></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ A11Y ============ -->
+<section id="a11y" style="background:var(--ath-bg-band)"><div class="wrap">
+  <h2>التباين وإمكانية القراءة</h2>
+  <p class="sub">قِست نسب التباين وفق WCAG 2.x. الحد 4.5 للنص العادي و3 للنص الكبير. هنا اكتشفت أن لونين مأخوذين مباشرة من التطبيقين لا يصلحان للنص.</p>
+  <div class="board"><table>
+    <thead><tr><th>الاستخدام</th><th>الألوان</th><th>النسبة</th><th>الحكم</th></tr></thead>
+    <tbody id="ctable"></tbody>
+  </table></div>
+  <p class="sub" style="margin-top:14px;font-size:13px">القاعدة العملية: الذهبي <span class="mono">#D4AF37</span> و<span class="mono">#B8860B</span> للحدود والزخارف فقط. أي نص ذهبي على الفاتح يستخدم <span class="mono">#8A6508</span>.</p>
+</div></section>
+
+</main>
+
+<footer><div class="wrap">
+  <p>المصادر: CSS الموقع الرسمي لـ <a href="https://minshawihighcouncil.com/share">مجلس القراء</a>، ولقطات الشاشة الرسمية على App Store لكل من <a href="https://apps.apple.com/us/app/wahy-holy-quran/id1615454207">وحي</a> و<a href="https://apps.apple.com/sa/app/6798995102?l=ar">مجلس القراء</a>. ألوان وحي مقاسة من الصور (±4 في كل قناة)، فهي تقريبية وليست قيمًا رسمية.</p>
+  <p style="margin-top:8px">هذا اقتراح مستوحى من اللغة البصرية للتطبيقين، لا نسخ لشعاراتهما أو أعمالهما الفنية أو صور القرّاء.</p>
+</div></footer>
+
+<script>
+/* ---------- theme toggle ---------- */
+const btn=document.getElementById('themeBtn');
+btn.addEventListener('click',()=>{const d=document.documentElement.dataset.theme==='dark';
+  document.documentElement.dataset.theme=d?'':'dark';btn.setAttribute('aria-pressed',String(!d));btn.textContent=d?'الوضع الداكن':'الوضع الفاتح';});
+
+/* ---------- swatches ---------- */
+const S={
+ forest:[['forest-900','#173d34','Athar','الهيرو والفوتر'],['forest-800','#1a4a3b','Majlis','حالة الضغط'],['forest-700','#305434','Wahy','الأزرار والأشرطة'],['forest-600','#508c54','Wahy','أيقونات'],['forest-500','#64b468','Wahy','زر الإنشاء'],['forest-100','#d8e3d3','Wahy','شارات'],['forest-50','#eef5ef','Athar','خلفية خفيفة']],
+ gold:[['gold-800','#836008','مشتق','نص ذهبي آمن'],['gold-600','#b8860b','Majlis','--accent'],['gold-500','#d4af37','Majlis','--accent-light'],['gold-300','#d0b468','Majlis','الزر العائم'],['gold-100','#f4ecd0','مشتق','حالة محجوز']],
+ surf:[['ivory','#fdfbf7','Majlis','خلفية الصفحة'],['parchment','#f0e8d4','Wahy','أشرطة الأقسام'],['parchment-2','#e8e0c8','Wahy','ترويسة البطاقة'],['ink-700','#4a3b2a','Majlis','نص أساسي'],['ink-500','#74644f','مشتق','نص ثانوي'],['ink-900','#1a120b','Majlis','داكن + نص قوي'],['maroon-700','#981818','Majlis','تمييز قسم']]
+};
+const cls={Majlis:'src-m',Wahy:'src-w',Athar:'src-a','مشتق':'src-d'};
+for(const [id,list] of Object.entries(S)){
+  document.getElementById(id).innerHTML=list.map(([n,h,s,u])=>`<div class="sw"><div style="background:${h}"></div><p><strong>${n}</strong><span class="mono">${h.toUpperCase()}</span><small><bdi>${u}</bdi></small><span class="${cls[s]}">${s}</span></p></div>`).join('');
+}
+
+/* ---------- parts grid ---------- */
+const reserved={2:'أحمد',3:'مريم',6:'خالد',11:'نور',14:'يوسف',19:'هدى',23:'عمر',27:'سلمى'};
+const done={1:'سارة',4:'محمد',9:'ليلى',15:'علي',20:'آمنة',26:'إبراهيم',28:'زينب'};
+const ar=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+const grid=document.getElementById('parts');
+function draw(){
+  grid.innerHTML='';let r=0,d=0;
+  for(let i=1;i<=30;i++){
+    const st=done[i]?'done':reserved[i]?'reserved':'available';
+    if(st==='reserved')r++;if(st==='done')d++;
+    const b=document.createElement('button');b.className='part '+st;
+    b.innerHTML=`<span class="no">${ar(i)}</span><span class="lbl">الجزء</span><span class="who">${st==='done'?'✓ '+done[i]:st==='reserved'?reserved[i]:'متاح'}</span>`;
+    if(st==='available')b.onclick=()=>{reserved[i]='أنت';draw();};
+    grid.appendChild(b);
+  }
+  document.getElementById('cR').textContent=ar(r);document.getElementById('cD').textContent=ar(d);
+}
+draw();
+
+/* ---------- contrast table ---------- */
+const L=h=>{h=h.slice(1);const f=c=>(c/=255)<=.03928?c/12.92:((c+.055)/1.055)**2.4;const[r,g,b]=[0,2,4].map(i=>f(parseInt(h.slice(i,i+2),16)));return .2126*r+.7152*g+.0722*b};
+const CR=(a,b)=>{const x=L(a),y=L(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+const pairs=[
+ ['نص أساسي','#4a3b2a','#fdfbf7'],['نص ثانوي','#74644f','#fdfbf7'],
+ ['نص ذهبي (الآمن)','#836008','#fdfbf7'],['نص ذهبي كما في مجلس القراء','#b8860b','#fdfbf7'],['ذهبي فاتح كنص','#d4af37','#fdfbf7'],
+ ['زر أساسي: أبيض على أخضر','#ffffff','#305434'],['أبيض على أخضر وحي الأوسط','#ffffff','#508c54'],
+ ['أبيض على أخضر زر الإنشاء في وحي','#ffffff','#64b468'],['نص داكن على زر الإنشاء (الحل)','#173d34','#64b468'],
+ ['ذهبي على أخضر الهيرو','#d4af37','#173d34'],['حالة محجوز: نص على خلفيتها','#836008','#f4ecd0'],['حالة متاح: نص على بطاقتها','#305434','#ffffff'],
+ ['داكن: نص أساسي','#f3ead8','#0f0a05'],['داكن: ذهبي','#d4af37','#0f0a05'],['داكن: أخضر','#64b468','#0f0a05'],['داكن: نص ثانوي','#b5a58a','#0f0a05']
+];
+document.getElementById('ctable').innerHTML=pairs.map(([n,a,b])=>{const r=CR(a,b);
+ const v=r>=4.5?['ok','يصلح للنص']:r>=3?['mid','للنص الكبير والأيقونات فقط']:['warn','لا يصلح للنص'];
+ return `<tr><td>${n}</td><td><span class="swatch-dot" style="background:${a}"></span><span class="swatch-dot" style="background:${b}"></span><span class="mono">${a.toUpperCase()} / ${b.toUpperCase()}</span></td><td class="mono">${r.toFixed(2)}</td><td class="${v[0]}">${v[1]}</td></tr>`}).join('');
+</script>
+</body>
+</html>
