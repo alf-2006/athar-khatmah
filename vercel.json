@@ -1,5 +1,20 @@
 {
   "functions": {
     "api/*.js": { "maxDuration": 10 }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/k/:slug",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(facebookexternalhit|[Ff]acebot|[Ww]hats[Aa]pp|[Tt]witterbot|[Tt]elegram[Bb]ot|[Ll]inked[Ii]n[Bb]ot|[Ss]lackbot|[Dd]iscordbot|[Ss]kype[Uu]ri[Pp]review|[Aa]pplebot|[Pp]interest|[Vv]iber|[Gg]ooglebot|[Bb]ingbot|[Bb]ing[Pp]review).*"
+        }
+      ],
+      "destination": "/api/og?slug=:slug"
+    },
+    { "source": "/k/:slug", "destination": "/index.html" },
+    { "source": "/new", "destination": "/index.html" }
+  ]
 }
