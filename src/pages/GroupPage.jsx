@@ -1,11 +1,24 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Check, ChevronLeft, ChevronRight, Copy, Plus, RefreshCw, Share2, Users, X } from 'lucide-react';
+import {
+  BookOpen,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Copy,
+  Plus,
+  RefreshCw,
+  Share2,
+  Users,
+  X
+} from 'lucide-react';
 import Logo, { Ornament } from '../Logo.jsx';
 import Topbar from '../components/Topbar.jsx';
 import OwnerPanel from '../components/OwnerPanel.jsx';
-import { ReleaseDialog, ReserveDialog } from '../components/Dialogs.jsx';
+import { ReleaseDialog, ReserveDialog, ReserveSuccessDialog } from '../components/Dialogs.jsx';
 import { Link } from '../lib/router.jsx';
 import { JUZ_META, PARTS, toAr } from '../lib/juz.js';
+import { downloadIcs } from '../lib/ics.js';
+import { quranUrl } from '../lib/quran.js';
 import {
   MEMORIAL_SLUG,
   api,
@@ -29,7 +42,21 @@ import { ADAB_STEPS, MEMORIAL_GROUP, groupCopy } from '../lib/texts.js';
 
 const POLL_MS = 10000;
 
+/* تذكير لطيف لمن حجز جزءا ولم يعد: يظهر بعد يوم كامل من الحجز. */
+const DAY_MS = 24 * 60 * 60 * 1000;
+
 const keyOf = (round, part) => `${round}:${part}`;
+
+const remindKey = (slug) => `athar-remind:${slug}`;
+
+function loadDismissed(slug) {
+  try {
+    const parsed = JSON.parse(store.get(remindKey(slug)) || '[]');
+    return Array.isArray(parsed) ? parsed.filter((v) => typeof v === 'string') : [];
+  } catch {
+    return [];
+  }
+}
 
 export default function GroupPage({ slug, theme, onToggleTheme }) {
   const memorial = slug === MEMORIAL_SLUG;
@@ -53,6 +80,7 @@ export default function GroupPage({ slug, theme, onToggleTheme }) {
   const [ownerInfo, setOwnerInfo] = useState(null);
   const [ownerBusy, setOwnerBusy] = useState(false);
   const [waiting, setWaitingState] = useState(() => getWaiting(slug));
+  const [dismissedReminders, setDismissedReminders] = useState(() => loadDismissed(slug));
 
   const reqRef = useRef(0);
   const viewRoundRef = useRef(null);
@@ -81,6 +109,24 @@ export default function GroupPage({ slug, theme, onToggleTheme }) {
         setData(res.data);
         setStatus('ready');
         setError('');
+        // ربط الحجوزات المحفوظة القديمة بمعرّفها في الخادم ليتسنى قياس عمر الحجز.
+        const rows = res.data?.bookings;
+        if (Array.isArray(rows) && rows.length && myRef.current.length) {
+          let changed = false;
+          const next = myRef.current.map((item) => {
+            if (item.id || item.round_no !== res.data.round) return item;
+            const row = rows.find(
+              (b) => b.part_number === item.part_number && b.display_name === item.display_name
+            );
+            if (!row?.id) return item;
+            changed = true;
+            return { ...item, id: row.id };
+          });
+          if (changed) {
+            setMyBookings(next);
+            saveMyBookings(slug, next);
+          }
+        }
       } else if (res.status === 404) {
         setStatus('notfound');
       } else {
@@ -229,6 +275,46 @@ export default function GroupPage({ slug, theme, onToggleTheme }) {
   const pendingMine = myBookings.filter((item) => statusOf(item) !== 'done');
   const firstPending = pendingMine[0];
 
+  // أقدم جزء محجوز على هذا الجهاز ولم يُتمَّ بعد أكثر من يوم.
+  const staleReminder = useMemo(() => {
+    if (!ready) return null;
+    const now = Date.now();
+    for (const item of myBookings) {
+      if (!item.id || dismissedReminders.includes(item.id)) continue;
+      if (statusOf(item) === 'done') continue;
+      const row = bookings.find((b) => b.id === item.id);
+      if (!row || row.completed) continue;
+      const started = Date.parse(row.created_at);
+      if (!Number.isFinite(started) || now - started < DAY_MS) continue;
+      return { ...item, days: Math.max(1, Math.floor((now - started) / DAY_MS)) };
+    }
+    return null;
+  }, [ready, myBookings, bookings, dismissedReminders, mineStatus]);
+
+  function dismissReminder() {
+    if (!staleReminder?.id) return;
+    const next = [...new Set([...dismissedReminders, staleReminder.id])].slice(-40);
+    setDismissedReminders(next);
+    store.set(remindKey(slug), JSON.stringify(next));
+  }
+
+  function addReminderToCalendar(record) {
+    const meta = JUZ_META[record.part_number - 1];
+    const ok = downloadIcs(
+      {
+        title: `قراءة الجزء ${toAr(record.part_number)} — ${copy.heading}`,
+        description: `«${meta?.title}» · ${meta?.surahs}. أكمل القراءة ثم عد إلى صفحة المجلس لتوثيقها.`,
+        url: publicUrl(slug)
+      },
+      `athar-juz-${record.part_number}.ics`
+    );
+    setToast(
+      ok
+        ? 'نزّلنا تذكيرا للتقويم. افتح الملف وسيضاف الموعد اليومي إلى تقويمك.'
+        : 'تعذر إنشاء تذكير التقويم على هذا المتصفح.'
+    );
+  }
+
   const roundTaken = useMemo(() => {
     const map = new Map((summary?.rounds || []).map((r) => [r.round_no, r.taken]));
     return (n) => map.get(n) ?? 0;
@@ -307,6 +393,7 @@ export default function GroupPage({ slug, theme, onToggleTheme }) {
       if (['PART_TAKEN', 'GROUP_FULL', 'GROUP_CLOSED'].includes(res.error)) await refreshAll({ fresh: true });
     } else {
       const record = {
+        id: res.data.id,
         round_no: res.data.round_no,
         part_number: res.data.part_number,
         display_name: cleanName,
@@ -320,7 +407,12 @@ export default function GroupPage({ slug, theme, onToggleTheme }) {
       saveMyBookings(slug, updated);
       setMineStatus((prev) => ({ ...prev, [keyOf(record.round_no, record.part_number)]: 'reading' }));
       store.set('athar-name', cleanName);
-      setDialog(null);
+      setDialog({
+        type: 'success',
+        round_no: record.round_no,
+        part_number: record.part_number,
+        display_name: cleanName
+      });
       const where = rounds > 1 ? ` من الختمة ${toAr(record.round_no)}` : '';
       setToast(
         `${dialog.auto ? 'خُصِّص لك' : 'تم تسجيل'} الجزء ${toAr(record.part_number)}${where} باسمك. أتم القراءة في وقتك ثم أكدها من هذا الجهاز.`
@@ -690,14 +782,25 @@ export default function GroupPage({ slug, theme, onToggleTheme }) {
                           <Check size={14} /> تمت القراءة
                         </span>
                       ) : (
-                        <button
-                          type="button"
-                          className="primary-btn compact"
-                          onClick={() => markComplete(item)}
-                          disabled={busy}
-                        >
-                          {busy ? 'جار الحفظ...' : 'أتممت القراءة'}
-                        </button>
+                        <div className="wird-actions">
+                          <a
+                            className="ghost-btn compact"
+                            href={quranUrl(item.part_number)}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <BookOpen size={14} aria-hidden="true" />
+                            اقرأ
+                          </a>
+                          <button
+                            type="button"
+                            className="primary-btn compact"
+                            onClick={() => markComplete(item)}
+                            disabled={busy}
+                          >
+                            {busy ? 'جار الحفظ...' : 'أتممت القراءة'}
+                          </button>
+                        </div>
                       )}
                     </div>
                   );
@@ -787,7 +890,7 @@ export default function GroupPage({ slug, theme, onToggleTheme }) {
               </div>
             )}
 
-            {pendingMine.length > 0 && (
+            {pendingMine.length > 0 && !staleReminder && (
               <div className="mobile-wird-banner">
                 <div className="mobile-wird-text">
                   لديك {pendingMine.length === 1 ? 'جزء قيد القراءة' : `${toAr(pendingMine.length)} أجزاء قيد القراءة`} على هذا الجهاز
@@ -805,6 +908,49 @@ export default function GroupPage({ slug, theme, onToggleTheme }) {
           </div>
 
           {reservePanel}
+
+          {staleReminder && (
+            <div className="remind-banner" role="status">
+              <div className="remind-text">
+                <strong>
+                  {staleReminder.days === 1
+                    ? 'عندك جزء محجوز من أمس'
+                    : `عندك جزء محجوز من ${toAr(staleReminder.days)} أيام`}
+                </strong>
+                <small>
+                  الجزء {toAr(staleReminder.part_number)} باسم {staleReminder.display_name}. عشر دقائق تكفي،
+                  ويسعد صاحب المجلس بإتمامه.
+                </small>
+              </div>
+              <div className="remind-actions">
+                <a
+                  className="primary-btn compact"
+                  href={quranUrl(staleReminder.part_number)}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <BookOpen size={15} aria-hidden="true" />
+                  اقرأه الآن
+                </a>
+                <button
+                  type="button"
+                  className="ghost-btn compact"
+                  onClick={() => markComplete(staleReminder)}
+                  disabled={busy}
+                >
+                  أتممت القراءة
+                </button>
+                <button
+                  type="button"
+                  className="icon-btn"
+                  onClick={dismissReminder}
+                  aria-label="إخفاء التذكير"
+                >
+                  <X size={15} />
+                </button>
+              </div>
+            </div>
+          )}
 
           <div className="index-toolbar">
             <div className="index-heading-wrap">
@@ -1012,6 +1158,15 @@ export default function GroupPage({ slug, theme, onToggleTheme }) {
           target={{ ...dialog, rounds }}
           busy={busy}
           onConfirm={confirmRelease}
+          onClose={closeDialog}
+        />
+      )}
+
+      {dialog?.type === 'success' && (
+        <ReserveSuccessDialog
+          target={dialog}
+          rounds={rounds}
+          onCalendar={() => addReminderToCalendar(dialog)}
           onClose={closeDialog}
         />
       )}

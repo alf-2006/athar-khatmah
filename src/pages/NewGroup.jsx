@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Check, Copy, Share2 } from 'lucide-react';
 import Topbar from '../components/Topbar.jsx';
+import QrPanel from '../components/QrPanel.jsx';
 import { Ornament } from '../Logo.jsx';
 import { Link, navigate } from '../lib/router.jsx';
 import {
@@ -119,6 +120,11 @@ export default function NewGroup({ theme, onToggleTheme }) {
             </p>
 
             <CopyField id="public-link" label="رابط المشاركة (انشره للجميع)" value={pub} />
+            <QrPanel
+              url={pub}
+              title={kind === 'general' ? title.trim() : `عن روح ${title.trim()}`}
+              caption="اطبعه أو اعرضه في الجلسة، ويمسحه الحاضرون بهواتفهم فيدخلون المجلس مباشرة."
+            />
             <div className="created-share">
               <a className="primary-btn" href={whatsapp} target="_blank" rel="noreferrer">
                 شارك عبر واتساب

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Check, Copy, Lock, LockOpen } from 'lucide-react';
 import { toAr } from '../lib/juz.js';
 import { copyText } from '../lib/client.js';
+import QrPanel from './QrPanel.jsx';
 
 const MAX_ROUNDS = 100;
 
@@ -112,6 +113,9 @@ export default function OwnerPanel({ info, busy, publicLink, privateLink, onAddR
           <span>{copied === 'private' ? 'نُسخ' : 'نسخ رابط الإدارة'}</span>
         </button>
       </div>
+
+      <QrPanel url={publicLink} caption="اعرض الكود على الحاضرين ليمسحوه بهواتفهم بدل تداول اللينك." />
+
       <p className="owner-note subtle">
         رابط الإدارة خاص بك وحدك؛ احفظه لتدير المجلس من أي جهاز. اضغط على أي جزء قيد القراءة في الفهرس لتحريره عند الحاجة.
       </p>

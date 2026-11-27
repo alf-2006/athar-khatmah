@@ -61,6 +61,7 @@ function normalizeBooking(item) {
   if (!Number.isInteger(part) || part < 1 || part > 30) return null;
   const round = Number.isInteger(item.round_no) && item.round_no >= 1 ? item.round_no : 1;
   return {
+    id: typeof item.id === 'string' ? item.id : undefined,
     round_no: round,
     part_number: part,
     display_name: String(item.display_name || '').slice(0, 40),

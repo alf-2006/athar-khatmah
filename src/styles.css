@@ -1883,3 +1883,140 @@ a.ghost-btn {
     font-size: 11.5px;
   }
 }
+
+/* ---------- تذكير القراءة، شاشة نجاح الحجز، ورمز QR ---------- */
+.remind-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 13px 15px;
+  margin-bottom: 18px;
+  background-color: var(--ath-reserved-bg);
+  border: 1px solid var(--ath-reserved-border);
+  border-right: 3px solid var(--ath-accent);
+  border-radius: var(--ath-r-md);
+}
+.remind-text {
+  min-width: 0;
+  flex: 1 1 240px;
+}
+.remind-text strong {
+  display: block;
+  font-size: var(--ath-fs-small);
+  color: var(--ath-reserved-text);
+}
+.remind-text small {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--ath-fs-caption);
+  line-height: 1.7;
+  color: var(--ath-text-muted);
+}
+.remind-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+.remind-actions .primary-btn.compact,
+.remind-actions .ghost-btn.compact {
+  height: 36px;
+  padding: 0 12px;
+}
+.wird-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.wird-actions .ghost-btn.compact,
+.wird-actions .primary-btn.compact {
+  height: 34px;
+  padding: 0 10px;
+  text-decoration: none;
+}
+.success-note {
+  margin: 4px 0 0;
+  font-size: var(--ath-fs-small);
+  line-height: 1.8;
+  color: var(--ath-text-muted);
+  text-align: center;
+}
+.success-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+.success-actions a {
+  text-decoration: none;
+  height: 46px;
+}
+.success-actions .ghost-btn {
+  height: 44px;
+  width: 100%;
+}
+.qr-block {
+  margin-top: 12px;
+}
+.qr-toggle {
+  width: 100%;
+  height: 40px;
+}
+.qr-card {
+  margin-top: 10px;
+  padding: 14px;
+  border-radius: var(--ath-r-md);
+  background-color: var(--ath-bg);
+  border: 1px dashed var(--ath-border-gold);
+  text-align: center;
+}
+.qr-frame {
+  display: inline-flex;
+  padding: 10px;
+  border-radius: var(--ath-r-sm);
+  background-color: #ffffff;
+  line-height: 0;
+}
+.qr-frame svg {
+  width: 168px;
+  height: 168px;
+  display: block;
+}
+.qr-title {
+  margin: 10px 0 0;
+  font-family: var(--ath-font-display);
+  font-size: var(--ath-fs-body);
+  font-weight: 700;
+  color: var(--ath-text-strong);
+}
+.qr-caption {
+  margin: 4px 0 10px;
+  font-size: var(--ath-fs-caption);
+  line-height: 1.7;
+  color: var(--ath-text-muted);
+}
+.qr-card .ghost-btn {
+  height: 36px;
+}
+@media (max-width: 719px) {
+  .remind-banner {
+    align-items: stretch;
+  }
+  .remind-actions {
+    width: 100%;
+  }
+  .remind-actions .primary-btn.compact {
+    flex: 1;
+  }
+  .wird-row {
+    flex-wrap: wrap;
+  }
+  .wird-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
