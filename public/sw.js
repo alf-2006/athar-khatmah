@@ -1,5 +1,12 @@
-const CACHE_NAME = 'athar-shell-v2';
-const SHELL_ASSETS = ['/', '/index.html', '/manifest.webmanifest', '/icon.svg'];
+const CACHE_NAME = 'athar-shell-v3';
+const SHELL_ASSETS = [
+  '/',
+  '/index.html',
+  '/site.webmanifest',
+  '/favicon.svg',
+  '/icon-192.png',
+  '/icon-512.png'
+];
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

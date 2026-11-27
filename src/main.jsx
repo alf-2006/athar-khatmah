@@ -1,14 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import {
-  Check,
-  Copy,
-  Moon,
-  RefreshCw,
-  Share2,
-  Sun,
-  X
-} from 'lucide-react';
+import { Check, Copy, Moon, RefreshCw, Share2, Sun, X } from 'lucide-react';
+import Logo, { Ornament } from './Logo.jsx';
+import './tokens.css';
 import './styles.css';
 
 const configured = import.meta.env.VITE_API_ENABLED !== 'false';
@@ -65,6 +59,8 @@ function toAr(value) {
 
 function getInitialTheme() {
   try {
+    const attr = document.documentElement.getAttribute('data-theme');
+    if (attr === 'dark' || attr === 'light') return attr;
     const saved = localStorage.getItem('athar-theme');
     if (saved === 'dark' || saved === 'light') return saved;
     if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) return 'dark';
@@ -114,7 +110,7 @@ function App() {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     const meta = document.getElementById('meta-theme-color');
-    if (meta) meta.setAttribute('content', theme === 'dark' ? '#161310' : '#F5EFE4');
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#0f0a05' : '#FDFBF7');
     try {
       localStorage.setItem('athar-theme', theme);
     } catch {}
@@ -302,15 +298,18 @@ function App() {
 
   return (
     <div className="majlis-app">
+      <a className="skip-link" href="#index-heading">
+        تخطَّ إلى فهرس الأجزاء
+      </a>
+
       <header className="topbar">
         <div className="topbar-inner">
-          <div className="brand-group">
-            <a href="#top" className="brand-wordmark" onClick={() => setMobileSection('index')}>
-              أَثَر
-            </a>
+          <a href="#top" className="brand-group" onClick={() => setMobileSection('index')}>
+            <Logo size={34} compact />
+            <span className="brand-wordmark">أَثَر</span>
             <span className="brand-divider" aria-hidden="true" />
             <span className="brand-caption">مجلس ختمة قرآنية جماعية</span>
-          </div>
+          </a>
 
           <div className="topbar-controls">
             <a
@@ -340,17 +339,27 @@ function App() {
       </header>
 
       <main id="top" className="workspace" data-mobile-section={mobileSection}>
-        {/* Right Column on Desktop / Majlis & Du'a Pane */}
+        {/* Right Column on Desktop: Majlis Archival Panel */}
         <aside className="majlis-column">
-          <section className="sheet-card dedication-card" aria-labelledby="majlis-heading">
+          <section className="sheet-card dedication-card corner-frame" aria-labelledby="majlis-heading">
+            <span className="corner tl" aria-hidden="true" />
+            <span className="corner tr" aria-hidden="true" />
+            <span className="corner bl" aria-hidden="true" />
+            <span className="corner br" aria-hidden="true" />
+
             <div className="card-header-rule">
-              <span className="card-tag">سجل الختمة القائمة</span>
+              <div className="seal-row">
+                <Logo size={26} compact />
+                <span className="card-tag">سجل الختمة القائمة</span>
+              </div>
               <span className="ayah-ref">البقرة · ١١٠</span>
             </div>
 
             <p className="quran-verse">
               ﴿ وَمَا تُقَدِّمُوا لِأَنْفُسِكُم مِّنْ خَيْرٍ تَجِدُوهُ عِندَ اللَّهِ ﴾
             </p>
+
+            <Ornament className="verse-ornament" />
 
             <h1 id="majlis-heading" className="majlis-title">
               خيرٌ يبقى وأثرٌ لا ينقطع
@@ -366,7 +375,13 @@ function App() {
                   {configured ? `${toAr(completedCount)} من ${toAr(30)} جزءا (${toAr(completedPct)}٪)` : '—'}
                 </strong>
               </div>
-              <div className="progress-track" role="progressbar" aria-valuenow={completedPct} aria-valuemin={0} aria-valuemax={100}>
+              <div
+                className="progress-track"
+                role="progressbar"
+                aria-valuenow={completedPct}
+                aria-valuemin={0}
+                aria-valuemax={100}
+              >
                 <span className="progress-fill done" style={{ width: `${completedPct}%` }} />
                 <span className="progress-fill reading" style={{ width: `${readingPct}%` }} />
               </div>
@@ -400,7 +415,7 @@ function App() {
                     <div key={item.part_number} className={`wird-row ${isDone ? 'is-done' : ''}`}>
                       <div className="wird-info">
                         <div className="wird-part">
-                          الجزء {toAr(item.part_number)} · <span>{meta?.title}</span>
+                          الجزء {toAr(item.part_number)} · <span>«{meta?.title}»</span>
                         </div>
                         <div className="wird-reader">باسم: {item.display_name}</div>
                       </div>
@@ -452,19 +467,24 @@ function App() {
             </div>
 
             <footer className="majlis-footer">
+              <Ornament className="footer-ornament" />
               <span>إنا لله وإنا إليه راجعون</span>
               <small>مبادرة تطوعية مفتوحة · ليست جهة رسمية أو إفتائية</small>
             </footer>
           </section>
         </aside>
 
-        {/* Left Column on Desktop / 30 Juz Index */}
+        {/* Left Column on Desktop: 30 Juz Index */}
         <section className="index-column" aria-labelledby="index-heading">
-          {/* Compact mobile-only summary strip so mobile Index view starts right on the action */}
-          <div className="mobile-summary-strip">
+          <div className="mobile-summary-strip corner-frame">
+            <span className="corner tl" aria-hidden="true" />
+            <span className="corner tr" aria-hidden="true" />
+            <span className="corner bl" aria-hidden="true" />
+            <span className="corner br" aria-hidden="true" />
+
             <div className="mobile-summary-top">
               <div>
-                <h1 className="mobile-headline">فهرس أجزاء الختمة</h1>
+                <h1 className="mobile-headline">مجلس أجزاء الختمة</h1>
                 <p className="mobile-subline">
                   اختر جزءا متاحا لقراءته وإهداء ثوابه والدعاء لشهداء الحادث
                 </p>
@@ -608,7 +628,7 @@ function App() {
                               : `يقرأه · ${booking.display_name}`}
                       </span>
                       <span className={`status-indicator ${state}`}>
-                        {state === 'done' ? <Check size={13} /> : <i className="status-dot" />}
+                        {state === 'done' ? <Check size={14} /> : <i className="status-dot" />}
                       </span>
                     </div>
                   </button>
@@ -643,7 +663,7 @@ function App() {
         </button>
         <button type="button" className="nav-tab" onClick={shareLink}>
           <span>{copied ? 'نُسخ الرابط' : 'دعوة مشارك'}</span>
-          <small>{copied ? <Copy size={11} /> : 'مشاركة'}</small>
+          <small>{copied ? <Copy size={12} /> : 'مشاركة'}</small>
         </button>
       </nav>
 
@@ -659,7 +679,7 @@ function App() {
           }}
         >
           <div
-            className="reserve-sheet"
+            className="reserve-sheet corner-frame"
             role="dialog"
             aria-modal="true"
             aria-labelledby="reserve-dialog-title"
